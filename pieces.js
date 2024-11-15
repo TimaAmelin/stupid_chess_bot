@@ -28,7 +28,6 @@ let flipped = false;
 let boardState = JSON.parse(JSON.stringify(initialBoard));
 
 function drawPieces() {
-    console.log(boardState)
     ctx.font = '36px Arial';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';

@@ -164,7 +164,6 @@ function handleClick(event) {
 
                             const movesByWeight = shuffleArray(moves).sort((moveA, moveB) => moveA.weight - moveB.weight);
                             const bestMove = movesByWeight[0];
-                            console.log(bestMove);
                             if (bestMove.type === 'castling left') {
                                 boardState[bestMove.from.row][0] = ' ';
                                 boardState[bestMove.from.row][3 - flipped] = boardState[bestMove.from.row][bestMove.from.col] === '♔' ? '♖' : '♜';
@@ -231,7 +230,6 @@ function handleClick(event) {
                                 turn = 'white';
                             }
                             movable = true;
-                            console.log(boardState);
                             render([]);
                         }, 500)
                     }
@@ -254,6 +252,19 @@ function handleClick(event) {
             render([]);
         } else {
             render(legalMoveCells);
+        }
+
+        const allPossibleMoves = findAllPossibleMoves(boardState);
+        if (!allPossibleMoves.length) {
+            if (bot !== 'none') {
+                setTimeout(() => alert('You lost!'), 100);
+            } else {
+                if (turn === 'black') {
+                    setTimeout(() => alert('White lost!'), 100);
+                } else {
+                    setTimeout(() => alert('Black lost!'), 100);
+                }
+            }
         }
     }
 }
