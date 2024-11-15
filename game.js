@@ -36,7 +36,7 @@ function handleClick(event) {
         selectedPiece = boardState[row][col];
         selectedPos = { row, col };
         legalMoveCells = findAllPossibleMovesForPiece(boardState, selectedPiece, selectedPos);
-        render(legalMoveCells);
+        render(isPieceYour(selectedPiece) ? legalMoveCells : []);
     } else if (selectedPiece) {
         let moved = false;
         if (
@@ -277,5 +277,5 @@ if (bot === 'white') {
         turn = 'black';
         render([]);
         movable = true;
-    }, 500)
+    }, 500);
 }
