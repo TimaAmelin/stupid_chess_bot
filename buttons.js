@@ -38,7 +38,7 @@ newGameBlack.addEventListener('click', () => {
         blackRightRookMoved = false;
         render([]);
         setTimeout(() => {
-            const allPossibleMoves = findAllPossibleMoves(boardState);
+            const allPossibleMoves = findAllPossibleMoves(boardState, turn);
         
             const move = allPossibleMoves[Math.floor(Math.random() * allPossibleMoves.length)];
         

@@ -1,4 +1,4 @@
-function findAllPossibleMoves(boardState) {
+function findAllPossibleMoves(boardState, turn) {
     const allPossibleMoves = [];
     for (let row = 0; row < BOARD_SIZE; row++) {
         for (let col = 0; col < BOARD_SIZE; col++) {

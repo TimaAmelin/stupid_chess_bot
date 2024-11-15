@@ -134,38 +134,16 @@ function handleClick(event) {
                         movable = false;
 
                         setTimeout(() => {
-                            const allPossibleMoves = findAllPossibleMoves(boardState);
+                            const allPossibleMoves = findAllPossibleMoves(boardState, turn);
                             if (allPossibleMoves.length === 0) {
                                 render([]);
                                 setTimeout(() => alert('You won!'), 100);
                                 movable = true;
                                 return;
                             }
-                            // let move = allPossibleMoves[Math.floor(Math.random() * allPossibleMoves.length)];
 
-                            const moves = [];
-
-                            for (const m of allPossibleMoves) {
-                                if (boardState[m.to.row][m.to.col] !== ' ') {
-                                    moves.push(
-                                        { 
-                                            ...m,
-                                            weight: pieceValues[boardState[m.to.row][m.to.col]] - pieceValues[boardState[m.from.row][m.from.col]] + 0.5,
-                                        }
-                                    );
-                                } else {
-                                    moves.push(
-                                        { 
-                                            ...m,
-                                            weight: 0,
-                                        }
-                                    );
-                                }
-                            }
-
-                            const movesByWeight = shuffleArray(moves).sort((moveA, moveB) => moveB.weight - moveA.weight);
-
-                            const bestMove = movesByWeight[0];
+                            // const bestMove = findBestMoveRandom(allPossibleMoves, boardState);
+                            const bestMove = findBestMove(allPossibleMoves, boardState);
                             if (bestMove.type === 'castling left') {
                                 boardState[bestMove.from.row][0] = ' ';
                                 boardState[bestMove.from.row][3 - flipped] = boardState[bestMove.from.row][bestMove.from.col] === '♔' ? '♖' : '♜';
@@ -257,7 +235,7 @@ function handleClick(event) {
             render(legalMoveCells);
         }
 
-        const allPossibleMoves = findAllPossibleMoves(boardState);
+        const allPossibleMoves = findAllPossibleMoves(boardState, turn);
         if (!allPossibleMoves.length) {
             if (bot !== turn) {
                 setTimeout(() => alert('You lost!'), 100);
@@ -284,7 +262,7 @@ render([]);
 
 if (bot === 'white') {
     setTimeout(() => {
-        const allPossibleMoves = findAllPossibleMoves(boardState);
+        const allPossibleMoves = findAllPossibleMoves(boardState, turn);
     
         const move = allPossibleMoves[Math.floor(Math.random() * allPossibleMoves.length)];
     
