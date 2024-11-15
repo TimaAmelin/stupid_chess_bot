@@ -36,7 +36,7 @@ function handleClick(event) {
         selectedPiece = boardState[row][col];
         selectedPos = { row, col };
         legalMoveCells = findAllPossibleMovesForPiece(boardState, selectedPiece, selectedPos);
-        render(isPieceYour(selectedPiece) ? legalMoveCells : []);
+        render(legalMoveCells);
     } else if (selectedPiece) {
         let moved = false;
         if (
