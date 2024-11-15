@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess Board</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <button id="new_game_white">New game with white</button>
+    <button id="new_game_black">New game with black</button>
+    <button id="new_game_both_uf">New game with both sides (unflipped)</button>
+    <button id="new_game_both_f">New game with both sides (flipped)</button>
+    <canvas id="chessBoard" width="400" height="400"></canvas>
+    <script src="board.js"></script>
+    <script src="pieces.js"></script>
+    <script src="./helpers/shuffleArray.js"></script>
+    <script src="./helpers/isKingInCheck.js"></script>
+    <script src="./helpers/isPathClear.js"></script>
+    <script src="./helpers/isPieceOpponent.js"></script>
+    <script src="./helpers/isPieceYour.js"></script>
+    <script src="./helpers/isSameColor.js"></script>
+    <script src="./pieceMoves/isValidBishopMove.js"></script>
+    <script src="./pieceMoves/isValidKingMove.js"></script>
+    <script src="./pieceMoves/isValidKnightMove.js"></script>
+    <script src="./pieceMoves/isValidPawnMove.js"></script>
+    <script src="./pieceMoves/isValidRookMove.js"></script>
+    <script src="./pieceMoves/isValidQueenMove.js"></script>
+    <script src="./pieceMoves/isValidMove.js"></script>
+    <script src="./botFunctions/findAllPossibleMovesForPiece.js"></script>
+    <script src="./botFunctions/findAllPossibleMoves.js"></script>
+    <script src="game.js"></script>
+    <script src="buttons.js"></script>
+</body>
+</html>
