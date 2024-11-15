@@ -150,7 +150,7 @@ function handleClick(event) {
                                     moves.push(
                                         { 
                                             ...m,
-                                            weight: pieceValues[boardState[m.from.row][m.from.col]] - pieceValues[boardState[m.to.row][m.to.col]] + 0.5,
+                                            weight: pieceValues[boardState[m.to.row][m.to.col]] - pieceValues[boardState[m.from.row][m.from.col]] + 0.5,
                                         }
                                     );
                                 } else {
@@ -163,7 +163,8 @@ function handleClick(event) {
                                 }
                             }
 
-                            const movesByWeight = shuffleArray(moves).sort((moveA, moveB) => moveA.weight - moveB.weight);
+                            const movesByWeight = shuffleArray(moves).sort((moveA, moveB) => moveB.weight - moveA.weight);
+
                             const bestMove = movesByWeight[0];
                             if (bestMove.type === 'castling left') {
                                 boardState[bestMove.from.row][0] = ' ';
