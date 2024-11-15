@@ -69,8 +69,8 @@ function handleClick(event) {
                         boardState[selectedPos.row][2 - flipped] = selectedPiece;
                     } else if (validMove === 'castling right') {
                         boardState[selectedPos.row][7] = ' ';
-                        boardState[selectedPos.row][5 + flipped] = selectedPiece === '♔' ? '♖' : '♜';
-                        boardState[selectedPos.row][6 + flipped] = selectedPiece;
+                        boardState[selectedPos.row][5 - flipped] = selectedPiece === '♔' ? '♖' : '♜';
+                        boardState[selectedPos.row][6 - flipped] = selectedPiece;
                     } else {
                         if (selectedPiece === '♙' && row === flipped * 7) {
                             boardState[row][col] = '♕';
@@ -138,6 +138,7 @@ function handleClick(event) {
                             if (allPossibleMoves.length === 0) {
                                 render([]);
                                 setTimeout(() => alert('You won!'), 100);
+                                movable = true;
                                 return;
                             }
                             // let move = allPossibleMoves[Math.floor(Math.random() * allPossibleMoves.length)];
@@ -149,7 +150,7 @@ function handleClick(event) {
                                     moves.push(
                                         { 
                                             ...m,
-                                            weight: pieceValues[boardState[m.from.row][m.from.col]] - pieceValues[boardState[m.to.row][m.to.col]],
+                                            weight: pieceValues[boardState[m.from.row][m.from.col]] - pieceValues[boardState[m.to.row][m.to.col]] + 0.5,
                                         }
                                     );
                                 } else {
@@ -170,8 +171,8 @@ function handleClick(event) {
                                 boardState[bestMove.from.row][2 - flipped] = boardState[bestMove.from.row][bestMove.from.col];
                             } else if (bestMove.type === 'castling right') {
                                 boardState[bestMove.from.row][7] = ' ';
-                                boardState[bestMove.from.row][5 + flipped] = boardState[bestMove.from.row][bestMove.from.col] === '♔' ? '♖' : '♜';
-                                boardState[bestMove.from.row][6 + flipped] = boardState[bestMove.from.row][bestMove.from.col];
+                                boardState[bestMove.from.row][5 - flipped] = boardState[bestMove.from.row][bestMove.from.col] === '♔' ? '♖' : '♜';
+                                boardState[bestMove.from.row][6 - flipped] = boardState[bestMove.from.row][bestMove.from.col];
                             } else {
                                 if (boardState[bestMove.from.row][bestMove.from.col] === '♙' && bestMove.to.row === flipped * 7) {
                                     boardState[bestMove.to.row][bestMove.to.col] = '♕';
@@ -223,11 +224,12 @@ function handleClick(event) {
                             if (bestMove.to.col === 7 && bestMove.to.row === 7 * flipped) {
                                 blackRightRookMoved = true;
                             }
-
-                            if (turn === 'white') {
-                                turn = 'black';
-                            } else {
-                                turn = 'white';
+                            if (allPossibleMoves.length) {
+                                if (turn === 'white') {
+                                    turn = 'black';
+                                } else {
+                                    turn = 'white';
+                                }
                             }
                             movable = true;
                             render([]);
@@ -256,13 +258,16 @@ function handleClick(event) {
 
         const allPossibleMoves = findAllPossibleMoves(boardState);
         if (!allPossibleMoves.length) {
-            if (bot !== 'none') {
+            if (bot !== turn) {
                 setTimeout(() => alert('You lost!'), 100);
-            } else {
+                movable = true;
+            } else if (bot === 'none') {
                 if (turn === 'black') {
                     setTimeout(() => alert('White lost!'), 100);
+                    movable = true;
                 } else {
                     setTimeout(() => alert('Black lost!'), 100);
+                    movable = true;
                 }
             }
         }
