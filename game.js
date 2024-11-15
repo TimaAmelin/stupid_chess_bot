@@ -194,10 +194,10 @@ function handleClick(event) {
                                 blackKingMoved = true;
                             }
                             if (boardState[bestMove.to.row][bestMove.to.col] === '♖') {
-                                if (move.from.col === 0) {
+                                if (bestMove.from.col === 0) {
                                     whiteLeftRookMoved = true;
                                 }
-                                if (move.from.col === 7) {
+                                if (bestMove.from.col === 7) {
                                     whiteRightRookMoved = true;
                                 }
                             }
