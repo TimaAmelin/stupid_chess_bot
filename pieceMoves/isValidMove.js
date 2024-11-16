@@ -1,4 +1,4 @@
-function isValidMove(boardState, piece, from, to) {
+function isValidMove(boardState, piece, from, to, whiteKingMoved, whiteLeftRookMoved, whiteRightRookMoved, blackKingMoved, blackLeftRookMoved, blackRightRookMoved) {
     const targetSquare = boardState[to.row][to.col];
 
     // Prevent moving out of bounds
@@ -31,7 +31,7 @@ function isValidMove(boardState, piece, from, to) {
         case '♕': case '♛': // Queen
             return isValidQueenMove(boardState, from, to);
         case '♔': case '♚': // King
-            return isValidKingMove(boardState, piece, from, to, rowDiff, colDiff);
+            return isValidKingMove(boardState, piece, from, to, rowDiff, colDiff, whiteKingMoved, whiteLeftRookMoved, whiteRightRookMoved, blackKingMoved, blackLeftRookMoved, blackRightRookMoved);
         default:
             return false;
     }

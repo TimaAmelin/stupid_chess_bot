@@ -35,7 +35,17 @@ function handleClick(event) {
     if (!selectedPiece && boardState[row][col] !== ' ') {
         selectedPiece = boardState[row][col];
         selectedPos = { row, col };
-        legalMoveCells = findAllPossibleMovesForPiece(boardState, selectedPiece, selectedPos);
+        legalMoveCells = findAllPossibleMovesForPiece(
+            boardState,
+            selectedPiece,
+            selectedPos,
+            whiteKingMoved,
+            whiteLeftRookMoved,
+            whiteRightRookMoved,
+            blackKingMoved,
+            blackLeftRookMoved,
+            blackRightRookMoved
+        );
         render(legalMoveCells);
     } else if (selectedPiece) {
         let moved = false;
@@ -43,7 +53,21 @@ function handleClick(event) {
             (['♖', '♘', '♗', '♕', '♔', '♙'].includes(selectedPiece) && turn === 'white') ||
             (['♜', '♞', '♝', '♛', '♚', '♟'].includes(selectedPiece) && turn === 'black')
         ) {
-            const validMove = isValidMove(boardState, selectedPiece, selectedPos, { row, col });
+            const validMove = isValidMove(
+                boardState,
+                selectedPiece,
+                selectedPos,
+                {
+                    row,
+                    col
+                },
+                whiteKingMoved,
+                whiteLeftRookMoved,
+                whiteRightRookMoved,
+                blackKingMoved,
+                blackLeftRookMoved,
+                blackRightRookMoved
+            );
             if (validMove) {
                 const copyBoardState = boardState.map(row => [...row]);
                 if (validMove === 'castling left') {
@@ -134,7 +158,16 @@ function handleClick(event) {
                         movable = false;
 
                         setTimeout(() => {
-                            const allPossibleMoves = findAllPossibleMoves(boardState, turn);
+                            const allPossibleMoves = findAllPossibleMoves(
+                                boardState,
+                                turn,
+                                whiteKingMoved,
+                                whiteLeftRookMoved,
+                                whiteRightRookMoved,
+                                blackKingMoved,
+                                blackLeftRookMoved,
+                                blackRightRookMoved
+                            );
                             if (allPossibleMoves.length === 0) {
                                 render([]);
                                 setTimeout(() => alert('You won!'), 100);
@@ -143,7 +176,8 @@ function handleClick(event) {
                             }
 
                             // const bestMove = findBestMoveRandom(allPossibleMoves, boardState);
-                            const bestMove = findBestMove(allPossibleMoves, boardState);
+                            // const bestMove = findBestMove(allPossibleMoves, boardState);
+                            const {bestMove, evaluation} = findBestMoveRecursive(allPossibleMoves, boardState, turn);
                             if (bestMove.type === 'castling left') {
                                 boardState[bestMove.from.row][0] = ' ';
                                 boardState[bestMove.from.row][3 - flipped] = boardState[bestMove.from.row][bestMove.from.col] === '♔' ? '♖' : '♜';
@@ -210,6 +244,7 @@ function handleClick(event) {
                                     turn = 'white';
                                 }
                             }
+                            lastMove = { piece: bestMove.piece, from: bestMove.from, to: bestMove.to };
                             movable = true;
                             render([]);
                         }, 500)
@@ -235,7 +270,16 @@ function handleClick(event) {
             render(legalMoveCells);
         }
 
-        const allPossibleMoves = findAllPossibleMoves(boardState, turn);
+        const allPossibleMoves = findAllPossibleMoves(
+            boardState,
+            turn,
+            whiteKingMoved,
+            whiteLeftRookMoved,
+            whiteRightRookMoved,
+            blackKingMoved,
+            blackLeftRookMoved,
+            blackRightRookMoved
+        );
         if (!allPossibleMoves.length) {
             if (bot !== turn) {
                 setTimeout(() => alert('You lost!'), 100);
@@ -254,23 +298,8 @@ function handleClick(event) {
 }
 
 function render(legalMoveCells) {
-    drawBoard(legalMoveCells);
+    drawBoard(legalMoveCells, lastMove);
     drawPieces();
 }
 
 render([]);
-
-if (bot === 'white') {
-    setTimeout(() => {
-        const allPossibleMoves = findAllPossibleMoves(boardState, turn);
-    
-        const move = allPossibleMoves[Math.floor(Math.random() * allPossibleMoves.length)];
-    
-        boardState[move.to.row][move.to.col] = boardState[move.from.row][move.from.col];
-        boardState[move.from.row][move.from.col] = ' ';
-    
-        turn = 'black';
-        render([]);
-        movable = true;
-    }, 500);
-}

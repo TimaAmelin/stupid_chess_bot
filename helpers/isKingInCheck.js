@@ -1,4 +1,12 @@
-function isKingInCheck(turn, boardState) {
+function isKingInCheck(
+    turn,
+    boardState,
+    whiteKingMoved,
+    whiteLeftRookMoved,
+    whiteRightRookMoved,
+    blackKingMoved,
+    blackLeftRookMoved,
+    blackRightRookMoved) {
     const king = turn === 'white' ? '♔' : '♚';
     const opponentTurn = turn === 'white' ? 'black' : 'white';
 
@@ -26,7 +34,18 @@ function isKingInCheck(turn, boardState) {
                 const to = kingPosition;
 
                 // Check if the piece can legally move to the king's position
-                if (isValidMove(boardState, piece, from, to)) {
+                if (isValidMove(
+                    boardState,
+                    piece,
+                    from,
+                    to,
+                    whiteKingMoved,
+                    whiteLeftRookMoved,
+                    whiteRightRookMoved,
+                    blackKingMoved,
+                    blackLeftRookMoved,
+                    blackRightRookMoved
+                )) {
                     return true; // King is in check
                 }
             }

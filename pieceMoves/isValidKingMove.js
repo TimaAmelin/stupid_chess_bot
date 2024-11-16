@@ -1,4 +1,4 @@
-function isValidKingMove(boardState, piece, from, to, rowDiff, colDiff) {
+function isValidKingMove(boardState, piece, from, to, rowDiff, colDiff, whiteKingMoved, whiteLeftRookMoved, whiteRightRookMoved, blackKingMoved, blackLeftRookMoved, blackRightRookMoved) {
     if (Math.abs(colDiff) > 1 && Math.abs(rowDiff) === 0) {
         if (piece === '♔' && !whiteKingMoved) {
             if (colDiff < 0 && isPathClear(boardState, from, { col: 0, row: from.row }) && !whiteLeftRookMoved) {

@@ -1,8 +1,29 @@
-function findAllPossibleMovesForPiece(boardState, selectedPiece, selectedPos) {
+function findAllPossibleMovesForPiece(
+    boardState,
+    selectedPiece,
+    selectedPos,
+    whiteKingMoved,
+    whiteLeftRookMoved,
+    whiteRightRookMoved,
+    blackKingMoved,
+    blackLeftRookMoved,
+    blackRightRookMoved
+) {
     const legalMoveCells = [];
     for (let row = 0; row < BOARD_SIZE; row++) {
         for (let col = 0; col < BOARD_SIZE; col++) {
-            const validMove = isValidMove(boardState, selectedPiece, selectedPos, { row, col });
+            const validMove = isValidMove(
+                boardState,
+                selectedPiece,
+                selectedPos,
+                { row, col },
+                whiteKingMoved,
+                whiteLeftRookMoved,
+                whiteRightRookMoved,
+                blackKingMoved,
+                blackLeftRookMoved,
+                blackRightRookMoved
+            );
             const copyBoardState = boardState.map(row => [...row]);
             let inCheckCastlingLeft = false;
             let inCheckCastlingRight = false;

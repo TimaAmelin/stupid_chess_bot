@@ -38,9 +38,20 @@ newGameBlack.addEventListener('click', () => {
         blackRightRookMoved = false;
         render([]);
         setTimeout(() => {
-            const allPossibleMoves = findAllPossibleMoves(boardState, turn);
-        
-            const move = allPossibleMoves[Math.floor(Math.random() * allPossibleMoves.length)];
+            const move = {
+                "from": {
+                    "row": 1,
+                    "col": 1
+                },
+                "to": {
+                    "row": 3,
+                    "col": 1
+                },
+                "piece": "♙",
+                "type": true
+            };
+
+            lastMove = move;
         
             boardState[move.to.row][move.to.col] = boardState[move.from.row][move.from.col];
             boardState[move.from.row][move.from.col] = ' ';
