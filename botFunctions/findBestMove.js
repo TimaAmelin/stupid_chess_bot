@@ -65,14 +65,41 @@ function findBestMove(allPossibleMoves, boardState) {
             }
             copyBoardState2[oppMove.from.row][oppMove.from.col] = ' ';
 
-            let evaluation = evaluatePosition(copyBoardState2, turn === 'white' ? 'black' : 'white');
+            let evaluation = evaluatePosition(
+                copyBoardState2,
+                turn === 'white' ? 'black' : 'white',
+                whiteKingMoved,
+                whiteLeftRookMoved,
+                whiteRightRookMoved,
+                blackKingMoved,
+                blackLeftRookMoved,
+                blackRightRookMoved
+            );
 
             if (allPossibleMovesAfterMove.length < 10) {
                 evaluation -= 0.1;
                 evaluation += allPossibleMovesAfterMove.length * 0.01;
             }
-            evaluation -= isKingInCheck(turn === 'white' ? 'black' : 'white', copyBoardState);
-            evaluation += isKingInCheck(turn, copyBoardState2);
+            evaluation -= isKingInCheck(
+                turn === 'white' ? 'black' : 'white',
+                copyBoardState,
+                whiteKingMoved,
+                whiteLeftRookMoved,
+                whiteRightRookMoved,
+                blackKingMoved,
+                blackLeftRookMoved,
+                blackRightRookMoved
+            );
+            evaluation += isKingInCheck(
+                turn,
+                copyBoardState2,
+                whiteKingMoved,
+                whiteLeftRookMoved,
+                whiteRightRookMoved,
+                blackKingMoved,
+                blackLeftRookMoved,
+                blackRightRookMoved
+            );
 
             if (-1 * evaluation < minEvaluation) {
                 minEvaluation = -1 * evaluation;

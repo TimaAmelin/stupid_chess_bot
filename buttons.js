@@ -36,6 +36,13 @@ newGameBlack.addEventListener('click', () => {
         whiteRightRookMoved = false;
         blackLeftRookMoved = false;
         blackRightRookMoved = false;
+
+        // whiteKingMoved = true;
+        // blackKingMoved = true;
+        // whiteLeftRookMoved = true;
+        // whiteRightRookMoved = true;
+        // blackLeftRookMoved = true;
+        // blackRightRookMoved = true;
         render([]);
         setTimeout(() => {
             const move = {

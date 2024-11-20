@@ -1,4 +1,4 @@
-function findBestMoveRecursive(allPossibleMoves, boardState, side, depth = 2) {
+function findBestMoveRecursive(allPossibleMoves, boardState, side, depth = 1) {
     let maxEvaluation = -1000000000;
     let maxEvaluationMove = allPossibleMoves[0];
 
@@ -28,9 +28,36 @@ function findBestMoveRecursive(allPossibleMoves, boardState, side, depth = 2) {
         copyBoardState[move.from.row][move.from.col] = ' ';
 
         if (depth === 0) {
-            if (isKingInCheck(turn === 'white' ? 'black' : 'white', copyBoardState)) {
-                const allPossibleMovesAfterMove = findAllPossibleMoves(copyBoardState, turn === 'white' ? 'black' : 'white');
-                const evaluation = allPossibleMovesAfterMove.length !== 0 ? evaluatePosition(copyBoardState, side) : 10000000;
+            if (isKingInCheck(
+                side === 'white' ? 'black' : 'white',
+                copyBoardState,
+                whiteKingMoved,
+                whiteLeftRookMoved,
+                whiteRightRookMoved,
+                blackKingMoved,
+                blackLeftRookMoved,
+                blackRightRookMoved
+            )) {
+                const allPossibleMovesAfterMove = findAllPossibleMoves(
+                    copyBoardState,
+                    side,
+                    whiteKingMoved,
+                    whiteLeftRookMoved,
+                    whiteRightRookMoved,
+                    blackKingMoved,
+                    blackLeftRookMoved,
+                    blackRightRookMoved
+                );
+                const evaluation = allPossibleMovesAfterMove.length !== 0 ? evaluatePosition(
+                    copyBoardState,
+                    side === 'white' ? 'black' : 'white',
+                    whiteKingMoved,
+                    whiteLeftRookMoved,
+                    whiteRightRookMoved,
+                    blackKingMoved,
+                    blackLeftRookMoved,
+                    blackRightRookMoved
+                ) : 10000000;
                 if (evaluation > maxEvaluation) {
                     maxEvaluation = evaluation;
                     maxEvaluationMove = move;
@@ -45,7 +72,16 @@ function findBestMoveRecursive(allPossibleMoves, boardState, side, depth = 2) {
             continue;
         }
 
-        const allPossibleMovesAfterMove = findAllPossibleMoves(copyBoardState, turn === 'white' ? 'black' : 'white');
+        const allPossibleMovesAfterMove = findAllPossibleMoves(
+            copyBoardState,
+            turn === 'white' ? 'black' : 'white',
+            whiteKingMoved,
+            whiteLeftRookMoved,
+            whiteRightRookMoved,
+            blackKingMoved,
+            blackLeftRookMoved,
+            blackRightRookMoved
+        );
 
         const {evaluation} = findBestMoveRecursive(allPossibleMovesAfterMove, copyBoardState, side === 'white' ? 'black' : 'white', depth - 1);
 

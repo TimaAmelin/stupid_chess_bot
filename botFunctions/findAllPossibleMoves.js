@@ -20,6 +20,7 @@ function findAllPossibleMoves(
                     boardState,
                     boardState[row][col],
                     { row, col },
+                    turn,
                     whiteKingMoved,
                     whiteLeftRookMoved,
                     whiteRightRookMoved,
@@ -34,5 +35,6 @@ function findAllPossibleMoves(
             }
         }
     }
+
     return allPossibleMoves;
 }

@@ -1,8 +1,7 @@
 function isValidMove(boardState, piece, from, to, whiteKingMoved, whiteLeftRookMoved, whiteRightRookMoved, blackKingMoved, blackLeftRookMoved, blackRightRookMoved) {
-    const targetSquare = boardState[to.row][to.col];
-
     // Prevent moving out of bounds
     if (to.row < 0 || to.row >= BOARD_SIZE || to.col < 0 || to.col >= BOARD_SIZE) return false;
+    const targetSquare = boardState[to.row][to.col];
 
     // Prevent moving onto a piece of the same color
     if (

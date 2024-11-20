@@ -12,6 +12,13 @@ let whiteRightRookMoved = false;
 let blackLeftRookMoved = false;
 let blackRightRookMoved = false;
 
+// let whiteKingMoved = true;
+// let blackKingMoved = true;
+// let whiteLeftRookMoved = true;
+// let whiteRightRookMoved = true;
+// let blackLeftRookMoved = true;
+// let blackRightRookMoved = true;
+
 // let bot = 'none';
 let bot = 'black';
 // let bot = 'white';
@@ -39,6 +46,7 @@ function handleClick(event) {
             boardState,
             selectedPiece,
             selectedPos,
+            turn,
             whiteKingMoved,
             whiteLeftRookMoved,
             whiteRightRookMoved,
@@ -72,13 +80,31 @@ function handleClick(event) {
                 const copyBoardState = boardState.map(row => [...row]);
                 if (validMove === 'castling left') {
                     copyBoardState[selectedPos.row][3 - flipped] = selectedPiece;
-                    if (isKingInCheck(turn, copyBoardState)) {
+                    if (isKingInCheck(
+                        turn,
+                        copyBoardState,
+                        whiteKingMoved,
+                        whiteLeftRookMoved,
+                        whiteRightRookMoved,
+                        blackKingMoved,
+                        blackLeftRookMoved,
+                        blackRightRookMoved
+                    )) {
                         return
                     }
 
                 } else if (validMove === 'castling right') {
                     copyBoardState[selectedPos.row][5 + flipped] = selectedPiece;
-                    if (isKingInCheck(turn, copyBoardState)) {
+                    if (isKingInCheck(
+                        turn,
+                        copyBoardState,
+                        whiteKingMoved,
+                        whiteLeftRookMoved,
+                        whiteRightRookMoved,
+                        blackKingMoved,
+                        blackLeftRookMoved,
+                        blackRightRookMoved
+                    )) {
                         return
                     }
                 }
@@ -177,7 +203,17 @@ function handleClick(event) {
 
                             // const bestMove = findBestMoveRandom(allPossibleMoves, boardState);
                             // const bestMove = findBestMove(allPossibleMoves, boardState);
-                            const {bestMove, evaluation} = findBestMoveRecursive(allPossibleMoves, boardState, turn);
+                            // const {bestMove, evaluation} = findBestMoveRecursive(allPossibleMoves, boardState, turn);
+                            const {bestMove, evaluation} = findBestMoveWithMinimax(
+                                boardState,
+                                turn,
+                                whiteKingMoved,
+                                whiteLeftRookMoved,
+                                whiteRightRookMoved,
+                                blackKingMoved,
+                                blackLeftRookMoved,
+                                blackRightRookMoved,
+                            );
                             if (bestMove.type === 'castling left') {
                                 boardState[bestMove.from.row][0] = ' ';
                                 boardState[bestMove.from.row][3 - flipped] = boardState[bestMove.from.row][bestMove.from.col] === '♔' ? '♖' : '♜';
@@ -257,7 +293,18 @@ function handleClick(event) {
         if (targetSquare !== ' ' && isPieceYour(targetSquare, turn)) {
             selectedPiece = targetSquare;
             selectedPos = { row, col };
-            legalMoveCells = findAllPossibleMovesForPiece(boardState, selectedPiece, selectedPos);
+            legalMoveCells = findAllPossibleMovesForPiece(
+                boardState,
+                selectedPiece,
+                selectedPos,
+                turn,
+                whiteKingMoved,
+                whiteLeftRookMoved,
+                whiteRightRookMoved,
+                blackKingMoved,
+                blackLeftRookMoved,
+                blackRightRookMoved
+            );
         } else {
             selectedPiece = null;
             selectedPos = null;

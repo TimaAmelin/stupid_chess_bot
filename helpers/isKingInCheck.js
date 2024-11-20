@@ -6,7 +6,8 @@ function isKingInCheck(
     whiteRightRookMoved,
     blackKingMoved,
     blackLeftRookMoved,
-    blackRightRookMoved) {
+    blackRightRookMoved
+) {
     const king = turn === 'white' ? '♔' : '♚';
     const opponentTurn = turn === 'white' ? 'black' : 'white';
 
