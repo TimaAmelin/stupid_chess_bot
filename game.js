@@ -5,19 +5,21 @@ let turn = 'white';
 
 let lastMove = null;
 
-let whiteKingMoved = false;
-let blackKingMoved = false;
-let whiteLeftRookMoved = false;
-let whiteRightRookMoved = false;
-let blackLeftRookMoved = false;
-let blackRightRookMoved = false;
+// let whiteKingMoved = false;
+// let blackKingMoved = false;
+// let whiteLeftRookMoved = false;
+// let whiteRightRookMoved = false;
+// let blackLeftRookMoved = false;
+// let blackRightRookMoved = false;
 
-// let whiteKingMoved = true;
-// let blackKingMoved = true;
-// let whiteLeftRookMoved = true;
-// let whiteRightRookMoved = true;
-// let blackLeftRookMoved = true;
-// let blackRightRookMoved = true;
+let whiteKingMoved = true;
+let blackKingMoved = true;
+let whiteLeftRookMoved = true;
+let whiteRightRookMoved = true;
+let blackLeftRookMoved = true;
+let blackRightRookMoved = true;
+
+let moveNumber = 1;
 
 // let bot = 'none';
 let bot = 'black';
@@ -111,7 +113,17 @@ function handleClick(event) {
                 copyBoardState[selectedPos.row][selectedPos.col] = ' ';
                 copyBoardState[row][col] = selectedPiece;
 
-                if (!isKingInCheck(turn, copyBoardState)) {
+                if (
+                    !isKingInCheck(
+                        turn,
+                        copyBoardState,
+                        whiteKingMoved,
+                        whiteLeftRookMoved,
+                        whiteRightRookMoved,
+                        blackKingMoved,
+                        blackLeftRookMoved,
+                        blackRightRookMoved
+                    )) {
                     boardState[selectedPos.row][selectedPos.col] = ' ';
                     if (validMove === 'castling left') {
                         boardState[selectedPos.row][0] = ' ';
@@ -129,6 +141,7 @@ function handleClick(event) {
                         } else {
                             boardState[row][col] = selectedPiece;
                         }
+                        moveNumber++;
                     }
                     moved = true;
                     if (validMove === 'en passant') {
@@ -204,6 +217,7 @@ function handleClick(event) {
                             // const bestMove = findBestMoveRandom(allPossibleMoves, boardState);
                             // const bestMove = findBestMove(allPossibleMoves, boardState);
                             // const {bestMove, evaluation} = findBestMoveRecursive(allPossibleMoves, boardState, turn);
+                            const pieces = boardState.map(row => row.join('')).join('').replaceAll(' ', '');
                             const {bestMove, evaluation} = findBestMoveWithMinimax(
                                 boardState,
                                 turn,
@@ -213,6 +227,7 @@ function handleClick(event) {
                                 blackKingMoved,
                                 blackLeftRookMoved,
                                 blackRightRookMoved,
+                                pieces.length <= 10 && !pieces.includes('♕') && !pieces.includes('♛') ? 6 : 4,
                             );
                             if (bestMove.type === 'castling left') {
                                 boardState[bestMove.from.row][0] = ' ';
@@ -230,6 +245,7 @@ function handleClick(event) {
                                 } else {
                                     boardState[bestMove.to.row][bestMove.to.col] = boardState[bestMove.from.row][bestMove.from.col];
                                 }
+                                moveNumber++;
                             }
                             moved = true;
                             if (bestMove.type === 'en passant') {

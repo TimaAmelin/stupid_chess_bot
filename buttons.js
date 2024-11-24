@@ -48,11 +48,11 @@ newGameBlack.addEventListener('click', () => {
             const move = {
                 "from": {
                     "row": 1,
-                    "col": 1
+                    "col": 3
                 },
                 "to": {
                     "row": 3,
-                    "col": 1
+                    "col": 3
                 },
                 "piece": "♙",
                 "type": true

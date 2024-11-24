@@ -7,27 +7,35 @@ function findBestMoveWithMinimax(
     blackKingMoved,
     blackLeftRookMoved,
     blackRightRookMoved,
-    depth = 4,
+    depth = 6,
     isMaximizing = true,
     alpha = -Infinity,
-    beta = Infinity
+    beta = Infinity,
+    moveNumber = 1
 ) {
+    if (moveNumber <= 10 && depth === 4) {
+        const fen = boardStateToFEN(boardState, side, whiteKingMoved, whiteLeftRookMoved, whiteRightRookMoved, blackKingMoved, blackLeftRookMoved, blackRightRookMoved);
+        if (openingBook[fen]) {
+            // Randomly pick a move from the opening book
+            const moves = openingBook[fen];
+            const move = moves[Math.floor(Math.random() * moves.length)];
+            return { bestMove: move, evaluation: 0 }; // Evaluation can be neutral as openings are predefined
+        }
+    }
     if (depth === 0) {
         return { evaluation: evaluatePosition(boardState, side, whiteKingMoved, whiteLeftRookMoved, whiteRightRookMoved, blackKingMoved, blackLeftRookMoved, blackRightRookMoved) };
     }
 
-    const allPossibleMoves = shuffleArray(
-        findAllPossibleMoves(
-            boardState,
-            side,
-            whiteKingMoved,
-            whiteLeftRookMoved,
-            whiteRightRookMoved,
-            blackKingMoved,
-            blackLeftRookMoved,
-            blackRightRookMoved
-        )
-    );
+    let allPossibleMoves = shuffleArray(findAllPossibleMoves(
+        boardState,
+        side,
+        whiteKingMoved,
+        whiteLeftRookMoved,
+        whiteRightRookMoved,
+        blackKingMoved,
+        blackLeftRookMoved,
+        blackRightRookMoved
+    ));
 
     // Проверка на отсутствие возможных ходов
     if (allPossibleMoves.length === 0) {
@@ -64,9 +72,9 @@ function findBestMoveWithMinimax(
             copyBoardState[move.from.row][5] = copyBoardState[move.from.row][move.from.col] === '♔' ? '♖' : '♜';
             copyBoardState[move.from.row][6] = copyBoardState[move.from.row][move.from.col];
         } else {
-            if (copyBoardState[move.from.row][move.from.col] === '♙' && move.to.row === 7) {
+            if (copyBoardState[move.from.row][move.from.col] === '♙' && move.to.row === 7 * flipped) {
                 copyBoardState[move.to.row][move.to.col] = '♕';
-            } else if (copyBoardState[move.from.row][move.from.col] === '♟' && move.to.row === 0) {
+            } else if (copyBoardState[move.from.row][move.from.col] === '♟' && move.to.row === 7 - 7 * flipped) {
                 copyBoardState[move.to.row][move.to.col] = '♛';
             } else {
                 copyBoardState[move.to.row][move.to.col] = copyBoardState[move.from.row][move.from.col];
@@ -91,7 +99,8 @@ function findBestMoveWithMinimax(
             depth - 1,
             !isMaximizing,
             alpha,
-            beta
+            beta,
+            moveNumber + 1,
         );
 
         const evaluation = result.evaluation;
