@@ -5,19 +5,19 @@ let turn = 'white';
 
 let lastMove = null;
 
-// let whiteKingMoved = false;
-// let blackKingMoved = false;
-// let whiteLeftRookMoved = false;
-// let whiteRightRookMoved = false;
-// let blackLeftRookMoved = false;
-// let blackRightRookMoved = false;
+let whiteKingMoved = false;
+let blackKingMoved = false;
+let whiteLeftRookMoved = false;
+let whiteRightRookMoved = false;
+let blackLeftRookMoved = false;
+let blackRightRookMoved = false;
 
-let whiteKingMoved = true;
-let blackKingMoved = true;
-let whiteLeftRookMoved = true;
-let whiteRightRookMoved = true;
-let blackLeftRookMoved = true;
-let blackRightRookMoved = true;
+// let whiteKingMoved = true;
+// let blackKingMoved = true;
+// let whiteLeftRookMoved = true;
+// let whiteRightRookMoved = true;
+// let blackLeftRookMoved = true;
+// let blackRightRookMoved = true;
 
 let moveNumber = 1;
 
