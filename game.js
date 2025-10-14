@@ -12,6 +12,8 @@ let whiteRightRookMoved = false;
 let blackLeftRookMoved = false;
 let blackRightRookMoved = false;
 
+const newBook = {...openingBook};
+
 // let whiteKingMoved = true;
 // let blackKingMoved = true;
 // let whiteLeftRookMoved = true;
@@ -38,6 +40,7 @@ canvas.addEventListener('click', handleClick);
 
 function handleClick(event) {
     if (!movable) return;
+    const boardFen = boardStateToFEN(boardState);
     const col = Math.floor(event.offsetX / TILE_SIZE);
     const row = Math.floor(event.offsetY / TILE_SIZE);
 
@@ -192,6 +195,34 @@ function handleClick(event) {
                     legalMoveCells = [];
                     selectedPiece = null;
                     selectedPos = null;
+
+                    // console.log(boardStateToFEN(boardState))
+    //                 console.log(`
+    // "${boardFen}": [
+    //     { from: { row: ${lastMove.from.row}, col: ${lastMove.from.col} }, to: { row: ${lastMove.to.row}, col: ${lastMove.to.col} } }, // c5 (Sicilian Defense)
+    // ],`);        
+                    if ((turn === 'white' && flipped === false) || (turn === 'black' && flipped === true)) {
+                        if (newBook[boardFen]) {
+                            let add = true;
+                            for (const move of newBook[boardFen]) {
+                                if (
+                                    move.from.row === lastMove.from.row &&
+                                    move.from.col === lastMove.from.col &&
+                                    move.to.row === lastMove.to.row &&
+                                    move.to.col === lastMove.to.col
+                                ) {
+                                    add = false;
+                                }
+                            }
+                            if (add) {
+                                newBook[boardFen].push(lastMove);
+                            }
+                        } else {
+                            newBook[boardFen] = [lastMove];
+                        }
+
+                        console.log(newBook);
+                    }
                     
                     if (turn === bot) {
                         movable = false;

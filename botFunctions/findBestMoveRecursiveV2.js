@@ -13,14 +13,12 @@ function findBestMoveWithMinimax(
     beta = Infinity,
     moveNumber = 1
 ) {
-    if (moveNumber <= 10 && depth === 4) {
-        const fen = boardStateToFEN(boardState, side, whiteKingMoved, whiteLeftRookMoved, whiteRightRookMoved, blackKingMoved, blackLeftRookMoved, blackRightRookMoved);
-        if (openingBook[fen]) {
-            // Randomly pick a move from the opening book
-            const moves = openingBook[fen];
-            const move = moves[Math.floor(Math.random() * moves.length)];
-            return { bestMove: move, evaluation: 0 }; // Evaluation can be neutral as openings are predefined
-        }
+    const fen = boardStateToFEN(boardState, side, whiteKingMoved, whiteLeftRookMoved, whiteRightRookMoved, blackKingMoved, blackLeftRookMoved, blackRightRookMoved);
+    if (openingBook[fen]) {
+        // Randomly pick a move from the opening book
+        const moves = openingBook[fen];
+        const move = moves[Math.floor(Math.random() * moves.length)];
+        return { bestMove: move, evaluation: 0 }; // Evaluation can be neutral as openings are predefined
     }
     if (depth === 0) {
         return { evaluation: evaluatePosition(boardState, side, whiteKingMoved, whiteLeftRookMoved, whiteRightRookMoved, blackKingMoved, blackLeftRookMoved, blackRightRookMoved) };
