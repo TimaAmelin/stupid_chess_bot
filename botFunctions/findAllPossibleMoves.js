@@ -8,6 +8,23 @@ function findAllPossibleMoves(
     blackLeftRookMoved,
     blackRightRookMoved
 ) {
+    // The optimized search engine is loaded later by index.html, but is
+    // available by the time this function is called from the game. Reusing its
+    // ray-based legal generator keeps UI mate checks consistent with the bot.
+    if (typeof searchPositionFromArguments === 'function' &&
+        typeof searchGenerateLegalMoves === 'function') {
+        return searchGenerateLegalMoves(searchPositionFromArguments(
+            boardState,
+            turn,
+            whiteKingMoved,
+            whiteLeftRookMoved,
+            whiteRightRookMoved,
+            blackKingMoved,
+            blackLeftRookMoved,
+            blackRightRookMoved
+        ));
+    }
+
     const allPossibleMoves = [];
     for (let row = 0; row < BOARD_SIZE; row++) {
         for (let col = 0; col < BOARD_SIZE; col++) {

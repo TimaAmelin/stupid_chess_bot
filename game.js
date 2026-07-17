@@ -258,7 +258,12 @@ function handleClick(event) {
                                 blackKingMoved,
                                 blackLeftRookMoved,
                                 blackRightRookMoved,
-                                pieces.length <= 10 && !pieces.includes('♕') && !pieces.includes('♛') ? 6 : 4,
+                                pieces.length <= 10 && !pieces.includes('♕') && !pieces.includes('♛') ? 10 : 8,
+                                true,
+                                -Infinity,
+                                Infinity,
+                                1,
+                                1500,
                             );
                             if (bestMove.type === 'castling left') {
                                 boardState[bestMove.from.row][0] = ' ';

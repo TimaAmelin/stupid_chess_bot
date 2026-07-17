@@ -184,84 +184,43 @@ function evaluatePosition(
     blackRightRookMoved,
     nextMove = false,
 ) {
-    let evaluation = 0;
-    let yourPieceMaterial = 0;
-    let oppPieceMaterial = 0;
+    let materialEvaluation = 0;
+    let middleGameEvaluation = 0;
+    let endGameEvaluation = 0;
+    let phase = 0;
+    const phaseWeights = {
+        '♘': 1, '♞': 1, '♗': 1, '♝': 1,
+        '♖': 2, '♜': 2, '♕': 4, '♛': 4,
+    };
 
     for (let row = 0; row < BOARD_SIZE; row++) {
         for (let col = 0; col < BOARD_SIZE; col++) {
-            if (boardState[row][col] === ' ') continue;
-            evaluation += (2 * isPieceYour(boardState[row][col], side) - 1) * pieceValues[boardState[row][col]];
+            const piece = boardState[row][col];
+            if (piece === ' ') continue;
+            const sign = isPieceYour(piece, side) ? 1 : -1;
+            const tableRow = flipped ? 7 - row : row;
+            materialEvaluation += sign * pieceValues[piece];
+            phase += phaseWeights[piece] || 0;
 
-            if (isPieceYour(boardState[row][col], side) && boardState[row][col] !== '♙' && boardState[row][col] !== '♟') {
-                yourPieceMaterial += pieceValues[boardState[row][col]];
+            if (piece === '♔' || piece === '♚') {
+                middleGameEvaluation += sign * kingMiddle[piece][tableRow][col];
+                endGameEvaluation += sign * kingEnd[piece][tableRow][col];
+            } else if (piece === '♙' || piece === '♟') {
+                middleGameEvaluation += sign * pawnsMiddle[piece][tableRow][col];
+                endGameEvaluation += sign * pawnsEnd[piece][tableRow][col];
             } else {
-                oppPieceMaterial += pieceValues[boardState[row][col]];
-            }
-
-            if (isPieceYour(boardState[row][col], side)) {
-                if (boardState[row][col] !== '♚' && boardState[row][col] !== '♔' && boardState[row][col] !== '♟' && boardState[row][col] !== '♙') {
-                    evaluation += table[boardState[row][col]][flipped ? 7 - row : row][col];
-                } else if (boardState[row][col] === '♚' || boardState[row][col] === '♔') {
-                    if (yourPieceMaterial <= 13 && oppPieceMaterial <= 13) {
-                        evaluation += kingEnd[boardState[row][col]][flipped ? 7 - row : row][col];
-                    } else {
-                        evaluation += kingMiddle[boardState[row][col]][flipped ? 7 - row : row][col];
-                    }
-                } else if (boardState[row][col] === '♟' || boardState[row][col] === '♙') {
-                    if (yourPieceMaterial <= 13 && oppPieceMaterial <= 13) {
-                        evaluation += pawnsEnd[boardState[row][col]][flipped ? 7 - row : row][col];
-                    } else {
-                        evaluation += pawnsMiddle[boardState[row][col]][flipped ? 7 - row : row][col];
-                    }
-                }
-            } else {
-                if (boardState[row][col] !== '♚' && boardState[row][col] !== '♔' && boardState[row][col] !== '♟' && boardState[row][col] !== '♙') {
-                    evaluation -= table[boardState[row][col]][flipped ? 7 - row : row][col];
-                } else if (boardState[row][col] === '♚' || boardState[row][col] === '♔') {
-                    if (yourPieceMaterial <= 13 && oppPieceMaterial <= 13) {
-                        evaluation -= kingEnd[boardState[row][col]][flipped ? 7 - row : row][col];
-                    } else {
-                        evaluation -= kingMiddle[boardState[row][col]][flipped ? 7 - row : row][col];
-                    }
-                } else if (boardState[row][col] === '♟' || boardState[row][col] === '♙') {
-                    if (yourPieceMaterial <= 13 && oppPieceMaterial <= 13) {
-                        evaluation -= pawnsEnd[boardState[row][col]][flipped ? 7 - row : row][col];
-                    } else {
-                        evaluation -= pawnsMiddle[boardState[row][col]][flipped ? 7 - row : row][col];
-                    }
-                }
+                const positionalValue = table[piece][tableRow][col];
+                middleGameEvaluation += sign * positionalValue;
+                endGameEvaluation += sign * positionalValue;
             }
         }
     }
 
-    if (oppPieceMaterial > 13) {
-        if (isPieceYour(boardState[0][2], side) && (boardState[0][2] === '♚' || boardState[0][2] === '♔')) {
-            evaluation += 10
-        }
-        if (isPieceYour(boardState[0][7], side) && (boardState[0][7] === '♚' || boardState[0][7] === '♔')) {
-            evaluation += 10
-        }
-        if (isPieceYour(boardState[7][2], side) && (boardState[7][2] === '♚' || boardState[7][2] === '♔')) {
-            evaluation += 10
-        }
-        if (isPieceYour(boardState[7][7], side) && (boardState[7][7] === '♚' || boardState[7][7] === '♔')) {
-            evaluation += 10
-        }
-    }
-
-    if (isKingInCheck(
-        side === 'white' ? 'black' : 'white',
-        boardState,
-        whiteKingMoved,
-        whiteLeftRookMoved,
-        whiteRightRookMoved,
-        blackKingMoved,
-        blackLeftRookMoved,
-        blackRightRookMoved
-    )) {
-        evaluation += 0.5;
-    }
-
-    return evaluation - 0.1 + Math.random() * 0.2;
+    // The normal starting phase is 24. Tapering avoids an abrupt switch of
+    // king and pawn tables when one arbitrary material threshold is crossed.
+    const middleGameWeight = Math.min(24, phase) / 24;
+    const endGameWeight = 1 - middleGameWeight;
+    return materialEvaluation +
+        middleGameEvaluation * middleGameWeight +
+        endGameEvaluation * endGameWeight;
 }
